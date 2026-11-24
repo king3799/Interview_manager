@@ -1,11 +1,7 @@
 import { Pool } from "pg";
 
 const pool = new Pool({
-  host: "localhost",
-  port: 5433,
-  user: "postgres",
-  password: "qwer1234",
-  database: "interviewjob",
+  connectionString: process.env.DATABASE_URL,
   max: 2,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,
