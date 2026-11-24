@@ -11,6 +11,8 @@ interface InterviewFormProps {
     interviewTime: string;
     country: string;
     suggestedRole: string;
+    profileName?: string | null;
+    intervieweeName?: string | null;
     mailUrl: string | null;
     jobUrl: string | null;
     meetingUrl: string | null;
