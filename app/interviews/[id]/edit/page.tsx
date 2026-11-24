@@ -1,0 +1,91 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { NavBar } from "@/components/nav-bar";
+import { InterviewForm } from "@/components/interview-form";
+
+export default function InterviewEditPage() {
+  const params = useParams();
+  const router = useRouter();
+  const [interview, setInterview] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchInterview = async () => {
+      try {
+        const response = await fetch(`/api/interviews/${params.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setInterview(data);
+        } else {
+          setError("Failed to load interview");
+        }
+      } catch (error) {
+        console.error("Error fetching interview:", error);
+        setError("Failed to load interview");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (params.id) {
+      fetchInterview();
+    }
+  }, [params.id]);
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+        <div style={{ textAlign: "center", padding: "3rem" }}>
+          <p style={{ color: "#6b7280" }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !interview) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+        <div style={{ textAlign: "center", padding: "3rem" }}>
+          <p style={{ color: "#ef4444", marginBottom: "1rem" }}>{error || "Interview not found"}</p>
+          <button
+            onClick={() => router.push("/interviews")}
+            style={{
+              padding: "0.5rem 1rem",
+              background: "#059669",
+              color: "white",
+              border: "none",
+              borderRadius: "0.5rem",
+              fontSize: "0.875rem",
+              fontWeight: "600",
+              cursor: "pointer"
+            }}
+          >
+            Back to list
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#f9fafb", display: "flex", flexDirection: "column" }}>
+      <main style={{ flex: 1, maxWidth: "80rem", width: "100%", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column" }}>
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h1 style={{ fontSize: "1.875rem", fontWeight: "700", color: "#111827", marginBottom: "0.5rem" }}>
+            Edit Interview
+          </h1>
+          <p style={{ color: "#6b7280", fontSize: "0.875rem" }}>
+            Update the interview details below.
+          </p>
+        </div>
+
+        <div style={{ flex: 1, background: "white", borderRadius: "0.5rem", boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)", padding: "2rem", display: "flex", flexDirection: "column" }}>
+          <InterviewForm interview={interview} mode="edit" />
+        </div>
+      </main>
+    </div>
+  );
+}

@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String      @id @default(cuid())
+  username     String      @unique
+  name         String
+  location     String?
+  note         String?
+  role         Role        @default(VIEWER)
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  interviews   Interview[]
+
+  @@map("users")
+}
+
+model Interview {
+  id              String          @id @default(cuid())
+  replyDate       DateTime        @db.Date
+  interviewTime   DateTime        @db.Timestamptz
+  country         String
+  suggestedRole   String
+  profileName     String?
+  intervieweeName String?
+  mailUrl         String?
+  jobUrl          String?
+  meetingUrl      String?
+  progress        ProgressStatus  @default(NOT)
+  createdBy       String
+  creator         User            @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([interviewTime])
+  @@index([createdBy])
+  @@map("interviews")
+}
+
+enum Role {
+  ADMIN
+  BIDDER
+  VIEWER
+}
+
+enum ProgressStatus {
+  SCHEDULED
+  PHONE_CALL
+  TEST
+  INITIAL
+  TECHNICAL
+  CEO_CTO
+  REJECTED
+  NOT
+}
