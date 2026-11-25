@@ -17,7 +17,7 @@ export async function GET(
     const result = await pool.query(
       `SELECT 
         i.id, i."replyDate", i."interviewTime", i.country, 
-        i."suggestedRole", i.profile_name, i.interviewee_name, i.note,
+        i."suggestedRole", i."profileName", i."intervieweeName", i.note,
         i."mailUrl", i."jobUrl", i."meetingUrl",
         i.progress, i."createdBy", i."createdAt", i."updatedAt",
         u.id as "creator_id", u.username as "creator_username", u.name as "creator_name"
@@ -43,8 +43,8 @@ export async function GET(
       interviewTime: row.interviewTime,
       country: row.country,
       suggestedRole: row.suggestedRole,
-      profileName: row.profile_name,
-      intervieweeName: row.interviewee_name,
+      profileName: row.profileName,
+      intervieweeName: row.intervieweeName,
       note: row.note,
       mailUrl: row.mailUrl,
       jobUrl: row.jobUrl,
@@ -141,8 +141,8 @@ export async function PUT(
         "interviewTime" = $2, 
         country = $3, 
         "suggestedRole" = $4, 
-        profile_name = $5, 
-        interviewee_name = $6, 
+        "profileName" = $5, 
+        "intervieweeName" = $6, 
         note = $7,
         "mailUrl" = $8, 
         "jobUrl" = $9, 
