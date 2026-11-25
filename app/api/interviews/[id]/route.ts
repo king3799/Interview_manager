@@ -17,7 +17,7 @@ export async function GET(
     const result = await pool.query(
       `SELECT 
         i.id, i."replyDate", i."interviewTime", i.country, 
-        i."suggestedRole", i.profile_name, i.interviewee_name,
+        i."suggestedRole", i.profile_name, i.interviewee_name, i.note,
         i."mailUrl", i."jobUrl", i."meetingUrl",
         i.progress, i."createdBy", i."createdAt", i."updatedAt",
         u.id as "creator_id", u.username as "creator_username", u.name as "creator_name"
@@ -45,6 +45,7 @@ export async function GET(
       suggestedRole: row.suggestedRole,
       profileName: row.profile_name,
       intervieweeName: row.interviewee_name,
+      note: row.note,
       mailUrl: row.mailUrl,
       jobUrl: row.jobUrl,
       meetingUrl: row.meetingUrl,
@@ -118,6 +119,7 @@ export async function PUT(
       suggestedRole,
       profileName,
       intervieweeName,
+      note,
       mailUrl,
       jobUrl,
       meetingUrl,
@@ -141,12 +143,13 @@ export async function PUT(
         "suggestedRole" = $4, 
         profile_name = $5, 
         interviewee_name = $6, 
-        "mailUrl" = $7, 
-        "jobUrl" = $8, 
-        "meetingUrl" = $9, 
-        progress = $10, 
+        note = $7,
+        "mailUrl" = $8, 
+        "jobUrl" = $9, 
+        "meetingUrl" = $10, 
+        progress = $11, 
         "updatedAt" = NOW()
-      WHERE id = $11
+      WHERE id = $12
       RETURNING *`,
       [
         new Date(replyDate),
@@ -155,6 +158,7 @@ export async function PUT(
         suggestedRole,
         profileName || null,
         intervieweeName || null,
+        note || null,
         mailUrl || null,
         jobUrl || null,
         meetingUrl || null,

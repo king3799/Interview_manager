@@ -13,6 +13,7 @@ interface InterviewFormProps {
     suggestedRole: string;
     profileName?: string | null;
     intervieweeName?: string | null;
+    note?: string | null;
     mailUrl: string | null;
     jobUrl: string | null;
     meetingUrl: string | null;
@@ -37,6 +38,7 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
       suggestedRole: interview?.suggestedRole || "",
       profileName: interview?.profileName || "",
       intervieweeName: interview?.intervieweeName || "",
+      note: interview?.note || "",
       mailUrl: interview?.mailUrl || "",
       jobUrl: interview?.jobUrl || "",
       meetingUrl: interview?.meetingUrl || "",
@@ -338,7 +340,40 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
           />
         </div>
 
-        {/* Row 4: Mail URL */}
+        {/* Row 4: Note (full width) */}
+        <div style={{ marginBottom: "1.5rem" }}>
+          <label htmlFor="note" style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#374151", marginBottom: "0.5rem" }}>
+            Note
+          </label>
+          <textarea
+            id="note"
+            name="note"
+            value={formData.note}
+            onChange={handleChange}
+            rows={3}
+            placeholder="Add any additional notes..."
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              border: "2px solid #d1d5db",
+              borderRadius: "0.5rem",
+              fontSize: "0.875rem",
+              outline: "none",
+              transition: "all 0.2s",
+              resize: "vertical"
+            }}
+            onFocus={(e) => {
+              e.target.style.borderColor = "#059669";
+              e.target.style.boxShadow = "0 0 0 3px rgba(5, 150, 105, 0.1)";
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = "#d1d5db";
+              e.target.style.boxShadow = "none";
+            }}
+          />
+        </div>
+
+        {/* Row 5: Mail URL */}
         <div style={{ marginBottom: "1.5rem" }}>
           <label htmlFor="mailUrl" style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#374151", marginBottom: "0.5rem" }}>
             Mail URL
@@ -370,7 +405,7 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
           />
         </div>
 
-        {/* Row 5: Job URL */}
+        {/* Row 6: Job URL */}
         <div style={{ marginBottom: "1.5rem" }}>
           <label htmlFor="jobUrl" style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#374151", marginBottom: "0.5rem" }}>
             Job URL
@@ -402,7 +437,7 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
           />
         </div>
 
-        {/* Row 6: Meeting URL */}
+        {/* Row 7: Meeting URL */}
         <div style={{ marginBottom: "1.5rem" }}>
           <label htmlFor="meetingUrl" style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#374151", marginBottom: "0.5rem" }}>
             Meeting URL

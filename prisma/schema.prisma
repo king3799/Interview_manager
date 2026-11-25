@@ -30,6 +30,7 @@ model Interview {
   suggestedRole   String
   profileName     String?
   intervieweeName String?
+  note            String?
   mailUrl         String?
   jobUrl          String?
   meetingUrl      String?

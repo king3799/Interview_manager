@@ -13,6 +13,7 @@ interface Interview {
   suggestedRole: string;
   profileName?: string | null;
   intervieweeName?: string | null;
+  note?: string | null;
   mailUrl: string | null;
   jobUrl: string | null;
   meetingUrl: string | null;
