@@ -42,7 +42,7 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
     return {
       replyDate: interview?.replyDate ? interview.replyDate.split("T")[0] : today,
       interviewTime: interview?.interviewTime ? interview.interviewTime.replace("Z", "").slice(0, 16) : "",
-      timezone: interview?.interviewTime ? "UTC" : Intl.DateTimeFormat().resolvedOptions().timeZone,
+      timezone: interview?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
       country: interview?.country || "",
       suggestedRole: interview?.suggestedRole || "",
       profileName: interview?.profileName || "",
@@ -185,7 +185,7 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "space-between" }}>
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
       <div>
         {error && (
           <div style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", padding: "0.75rem 1rem", borderRadius: "0.5rem", fontSize: "0.875rem", marginBottom: "1.5rem" }}>
@@ -359,15 +359,30 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
               }}
             >
               <option value="UTC">UTC (GMT+0)</option>
-              <option value="America/New_York">New York (GMT-5/-4)</option>
-              <option value="America/Los_Angeles">Los Angeles (GMT-8/-7)</option>
-              <option value="Europe/London">London (GMT+0/+1)</option>
-              <option value="Europe/Paris">Paris (GMT+1/+2)</option>
-              <option value="Asia/Seoul">Seoul (GMT+9)</option>
-              <option value="Asia/Tokyo">Tokyo (GMT+9)</option>
-              <option value="Asia/Shanghai">Shanghai (GMT+8)</option>
-              <option value="Asia/Dubai">Dubai (GMT+4)</option>
-              <option value="Australia/Sydney">Sydney (GMT+10/+11)</option>
+              <option value="America/New_York">America/New_York (GMT-5/-4)</option>
+              <option value="America/Chicago">America/Chicago (GMT-6/-5)</option>
+              <option value="America/Denver">America/Denver (GMT-7/-6)</option>
+              <option value="America/Los_Angeles">America/Los_Angeles (GMT-8/-7)</option>
+              <option value="America/Toronto">America/Toronto (GMT-5/-4)</option>
+              <option value="America/Mexico_City">America/Mexico_City (GMT-6/-5)</option>
+              <option value="America/Sao_Paulo">America/Sao_Paulo (GMT-3)</option>
+              <option value="Europe/London">Europe/London (GMT+0/+1)</option>
+              <option value="Europe/Paris">Europe/Paris (GMT+1/+2)</option>
+              <option value="Europe/Berlin">Europe/Berlin (GMT+1/+2)</option>
+              <option value="Europe/Madrid">Europe/Madrid (GMT+1/+2)</option>
+              <option value="Europe/Rome">Europe/Rome (GMT+1/+2)</option>
+              <option value="Europe/Amsterdam">Europe/Amsterdam (GMT+1/+2)</option>
+              <option value="Europe/Moscow">Europe/Moscow (GMT+3)</option>
+              <option value="Asia/Dubai">Asia/Dubai (GMT+4)</option>
+              <option value="Asia/Kolkata">Asia/Kolkata (GMT+5:30)</option>
+              <option value="Asia/Singapore">Asia/Singapore (GMT+8)</option>
+              <option value="Asia/Hong_Kong">Asia/Hong_Kong (GMT+8)</option>
+              <option value="Asia/Shanghai">Asia/Shanghai (GMT+8)</option>
+              <option value="Asia/Tokyo">Asia/Tokyo (GMT+9)</option>
+              <option value="Asia/Seoul">Asia/Seoul (GMT+9)</option>
+              <option value="Australia/Sydney">Australia/Sydney (GMT+10/+11)</option>
+              <option value="Australia/Melbourne">Australia/Melbourne (GMT+10/+11)</option>
+              <option value="Pacific/Auckland">Pacific/Auckland (GMT+12/+13)</option>
             </select>
           </div>
 
@@ -678,52 +693,34 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
             }}
           />
         </div>
-      </div>
 
-      {/* Buttons */}
-      <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", paddingTop: "2rem", borderTop: "1px solid #e5e7eb" }}>
-        <button
-          type="button"
-          onClick={handleCancel}
-          style={{
-            padding: "0.625rem 1.5rem",
-            background: "white",
-            color: "#374151",
-            border: "1px solid #d1d5db",
-            borderRadius: "0.5rem",
-            fontSize: "0.875rem",
-            fontWeight: "500",
-            cursor: "pointer",
-            transition: "all 0.2s"
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.background = "#f9fafb"}
-          onMouseLeave={(e) => e.currentTarget.style.background = "white"}
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={loading || uploadingResume}
-          style={{
-            padding: "0.625rem 1.5rem",
-            background: (loading || uploadingResume) ? "#6ee7b7" : "#059669",
-            color: "white",
-            border: "none",
-            borderRadius: "0.5rem",
-            fontSize: "0.875rem",
-            fontWeight: "600",
-            cursor: (loading || uploadingResume) ? "not-allowed" : "pointer",
-            transition: "all 0.2s"
-          }}
-          onMouseEnter={(e) => {
-            if (!loading && !uploadingResume) e.currentTarget.style.background = "#047857";
-          }}
-          onMouseLeave={(e) => {
-            if (!loading && !uploadingResume) e.currentTarget.style.background = "#059669";
-          }}
-        >
-          {uploadingResume ? "Uploading resume..." : loading ? "Saving..." : mode === "create" ? "Create Interview" : "Update Interview"}
-        </button>
+        {/* Submit Button */}
+        <div style={{ marginTop: "2rem" }}>
+          <button
+            type="submit"
+            disabled={loading || uploadingResume}
+            style={{
+              width: "100%",
+              padding: "0.75rem 1.5rem",
+              background: (loading || uploadingResume) ? "#6ee7b7" : "#059669",
+              color: "white",
+              border: "none",
+              borderRadius: "0.5rem",
+              fontSize: "0.875rem",
+              fontWeight: "600",
+              cursor: (loading || uploadingResume) ? "not-allowed" : "pointer",
+              transition: "all 0.2s"
+            }}
+            onMouseEnter={(e) => {
+              if (!loading && !uploadingResume) e.currentTarget.style.background = "#047857";
+            }}
+            onMouseLeave={(e) => {
+              if (!loading && !uploadingResume) e.currentTarget.style.background = "#059669";
+            }}
+          >
+            {uploadingResume ? "Uploading resume..." : loading ? "Saving..." : mode === "create" ? "Create Interview" : "Update Interview"}
+          </button>
+        </div>
       </div>
     </form>
   );
