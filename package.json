@@ -13,6 +13,7 @@
     "db:seed": "tsx scripts/seed-admin.ts",
     "db:setup-neon": "tsx scripts/setup-neon.ts",
     "db:add-note": "tsx scripts/add-note-column.ts",
+    "db:add-timezone": "tsx scripts/add-timezone-column.ts",
     "db:studio": "prisma studio"
   },
   "dependencies": {

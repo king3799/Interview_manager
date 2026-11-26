@@ -16,7 +16,7 @@ export async function GET(
 
     const result = await pool.query(
       `SELECT 
-        i.id, i."replyDate", i."interviewTime", i.country, 
+        i.id, i."replyDate", i."interviewTime", i.timezone, i.country, 
         i."suggestedRole", i."profileName", i."intervieweeName", i.note,
         i."mailUrl", i."jobUrl", i."meetingUrl",
         i.progress, i."createdBy", i."createdAt", i."updatedAt",
@@ -41,6 +41,7 @@ export async function GET(
       id: row.id,
       replyDate: row.replyDate,
       interviewTime: row.interviewTime,
+      timezone: row.timezone,
       country: row.country,
       suggestedRole: row.suggestedRole,
       profileName: row.profileName,
@@ -115,6 +116,7 @@ export async function PUT(
     const {
       replyDate,
       interviewTime,
+      timezone,
       country,
       suggestedRole,
       profileName,
@@ -139,21 +141,23 @@ export async function PUT(
       SET 
         "replyDate" = $1, 
         "interviewTime" = $2, 
-        country = $3, 
-        "suggestedRole" = $4, 
-        "profileName" = $5, 
-        "intervieweeName" = $6, 
-        note = $7,
-        "mailUrl" = $8, 
-        "jobUrl" = $9, 
-        "meetingUrl" = $10, 
-        progress = $11, 
+        timezone = $3,
+        country = $4, 
+        "suggestedRole" = $5, 
+        "profileName" = $6, 
+        "intervieweeName" = $7, 
+        note = $8,
+        "mailUrl" = $9, 
+        "jobUrl" = $10, 
+        "meetingUrl" = $11, 
+        progress = $12, 
         "updatedAt" = NOW()
-      WHERE id = $12
+      WHERE id = $13
       RETURNING *`,
       [
         new Date(replyDate),
         new Date(interviewTime),
+        timezone || "UTC",
         country,
         suggestedRole,
         profileName || null,

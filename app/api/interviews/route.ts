@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     let query = `
       SELECT 
-        i.id, i."replyDate", i."interviewTime", i.country, 
+        i.id, i."replyDate", i."interviewTime", i.timezone, i.country, 
         i."suggestedRole", i."profileName", i."intervieweeName", i.note,
         i."mailUrl", i."jobUrl", i."meetingUrl",
         i.progress, i."createdBy", i."createdAt", i."updatedAt",
@@ -88,6 +88,7 @@ export async function GET(request: NextRequest) {
         id: row.id,
         replyDate: row.replyDate,
         interviewTime: row.interviewTime,
+        timezone: row.timezone,
         country: row.country,
         suggestedRole: row.suggestedRole,
         profileName: row.profileName,
@@ -142,6 +143,7 @@ export async function POST(request: NextRequest) {
     const {
       replyDate,
       interviewTime,
+      timezone,
       country,
       suggestedRole,
       profileName,
@@ -170,13 +172,14 @@ export async function POST(request: NextRequest) {
 
     const result = await pool.query(
       `INSERT INTO interviews 
-        (id, "replyDate", "interviewTime", country, "suggestedRole", "profileName", "intervieweeName", note, "mailUrl", "jobUrl", "meetingUrl", progress, "createdBy", "createdAt", "updatedAt")
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW(), NOW())
+        (id, "replyDate", "interviewTime", timezone, country, "suggestedRole", "profileName", "intervieweeName", note, "mailUrl", "jobUrl", "meetingUrl", progress, "createdBy", "createdAt", "updatedAt")
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, NOW(), NOW())
       RETURNING *`,
       [
         generateId(),
         new Date(replyDate),
         new Date(interviewTime),
+        timezone || "UTC",
         country,
         suggestedRole,
         profileName || null,

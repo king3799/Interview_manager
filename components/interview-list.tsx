@@ -9,6 +9,7 @@ interface Interview {
   id: string;
   replyDate: string;
   interviewTime: string;
+  timezone?: string;
   country: string;
   suggestedRole: string;
   profileName?: string | null;

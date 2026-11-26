@@ -9,6 +9,7 @@ interface InterviewFormProps {
     id: string;
     replyDate: string;
     interviewTime: string;
+    timezone?: string;
     country: string;
     suggestedRole: string;
     profileName?: string | null;

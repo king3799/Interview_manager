@@ -26,6 +26,7 @@ model Interview {
   id              String          @id @default(cuid())
   replyDate       DateTime        @db.Date
   interviewTime   DateTime        @db.Timestamptz
+  timezone        String          @default("UTC")
   country         String
   suggestedRole   String
   profileName     String?
