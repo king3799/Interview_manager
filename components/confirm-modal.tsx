@@ -132,14 +132,16 @@ export function ConfirmModal({
         </div>
 
         {/* Message */}
-        <div style={{ marginBottom: "1.5rem", paddingLeft: "4rem" }}>
+        <div style={{ marginBottom: "1.5rem" }}>
           <p
             style={{
               fontSize: "0.875rem",
               color: "#6b7280",
               lineHeight: "1.5",
               margin: 0,
-              textAlign: "left",
+              textAlign: "center",
+              wordWrap: "break-word",
+              overflowWrap: "break-word",
             }}
           >
             {message}
