@@ -27,10 +27,12 @@ export function InterviewTime({
     try {
       const date = new Date(dateTime);
       const offset = getTimezoneOffset(tz, date);
-      // offset is in milliseconds, negative for zones ahead of UTC
+      // offset is in milliseconds
+      // Positive offset means ahead of UTC (e.g., Sydney = +39600000ms = UTC+11)
+      // Negative offset means behind UTC (e.g., New York = -18000000ms = UTC-5)
       const hours = Math.floor(Math.abs(offset) / (1000 * 60 * 60));
       const minutes = Math.floor((Math.abs(offset) % (1000 * 60 * 60)) / (1000 * 60));
-      const sign = offset < 0 ? '+' : '-'; // Negative offset means ahead of UTC (positive offset display)
+      const sign = offset >= 0 ? '+' : '-';
       return minutes > 0 ? `UTC${sign}${hours}:${minutes.toString().padStart(2, '0')}` : `UTC${sign}${hours}`;
     } catch (error) {
       return 'UTC+0';
