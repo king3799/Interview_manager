@@ -54,9 +54,8 @@ export async function POST(request: NextRequest) {
     const sanitizedFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const filename = `resumes/${session.user.id}/${timestamp}-${sanitizedFilename}`;
 
-    // Upload to Vercel Blob
+    // Upload to Vercel Blob (using store's default access setting)
     const blob = await put(filename, file, {
-      access: "public",
       addRandomSuffix: false,
     });
 
