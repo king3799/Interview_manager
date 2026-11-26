@@ -157,18 +157,56 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
               const progressStyle = getProgressStyle(interview.progress);
               return (
                 <tr key={interview.id} style={{ borderBottom: "1px solid #e5e7eb" }}>
-                  <td style={{ padding: "1rem", color: "#6b7280", fontWeight: "500" }}>
+                  <td style={{ padding: "1rem", color: "#6b7280", fontWeight: "500", whiteSpace: "nowrap" }}>
                     {startIndex + index + 1}
                   </td>
-                  <td style={{ padding: "1rem", color: "#374151" }}>
+                  <td style={{ 
+                    padding: "1rem", 
+                    color: "#374151",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    minWidth: 0,
+                    maxWidth: "150px"
+                  }}>
                     {formatDate(interview.replyDate)}
                   </td>
-                  <td style={{ padding: "1rem", color: "#374151" }}>
+                  <td style={{ 
+                    padding: "1rem", 
+                    color: "#374151",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    minWidth: 0,
+                    maxWidth: "180px"
+                  }}>
                     {formatToLocalTime(interview.interviewTime, undefined, "yyyy-MM-dd HH:mm")}
                   </td>
-                  <td style={{ padding: "1rem", color: "#374151" }}>{interview.country}</td>
-                  <td style={{ padding: "1rem", color: "#374151" }}>{interview.suggestedRole}</td>
-                  <td style={{ padding: "1rem" }}>
+                  <td style={{ 
+                    padding: "1rem", 
+                    color: "#374151",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    minWidth: 0,
+                    maxWidth: "120px"
+                  }}>
+                    {interview.country}
+                  </td>
+                  <td style={{ 
+                    padding: "1rem", 
+                    color: "#374151",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    minWidth: 0,
+                    maxWidth: "250px"
+                  }}>
+                    <span title={interview.suggestedRole}>
+                      {interview.suggestedRole}
+                    </span>
+                  </td>
+                  <td style={{ padding: "1rem", whiteSpace: "nowrap" }}>
                     <span
                       style={{
                         padding: "0.25rem 0.75rem",
@@ -176,18 +214,34 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
                         color: progressStyle.color,
                         borderRadius: "0.375rem",
                         fontSize: "0.75rem",
-                        fontWeight: "600"
+                        fontWeight: "600",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        display: "inline-block",
+                        maxWidth: "120px"
                       }}
+                      title={progressStyle.label}
                     >
                       {progressStyle.label}
                     </span>
                   </td>
                   {!isViewer && (
-                    <td style={{ padding: "1rem", color: "#6b7280" }}>
-                      {interview.creator?.username || "Unknown"}
+                    <td style={{ 
+                      padding: "1rem", 
+                      color: "#6b7280",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      minWidth: 0,
+                      maxWidth: "150px"
+                    }}>
+                      <span title={interview.creator?.username || "Unknown"}>
+                        {interview.creator?.username || "Unknown"}
+                      </span>
                     </td>
                   )}
-                  <td style={{ padding: "1rem", textAlign: "right" }}>
+                  <td style={{ padding: "1rem", textAlign: "right", whiteSpace: "nowrap" }}>
                     <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
                       <Link
                         href={`/interviews/${interview.id}`}
@@ -198,7 +252,8 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
                           borderRadius: "0.375rem",
                           textDecoration: "none",
                           fontSize: "0.75rem",
-                          fontWeight: "500"
+                          fontWeight: "500",
+                          whiteSpace: "nowrap"
                         }}
                       >
                         View
