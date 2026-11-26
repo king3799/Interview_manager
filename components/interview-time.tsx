@@ -1,7 +1,6 @@
 "use client";
 
 import { formatStoredTime, formatToLocalTime } from "@/lib/timezone";
-import { getTimezoneOffset } from "date-fns-tz";
 
 interface InterviewTimeProps {
   interviewTime: string;
@@ -22,24 +21,34 @@ export function InterviewTime({
   const localTime = formatToLocalTime(interviewTime, undefined, format);
   const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  // Calculate UTC offset for the specific date
-  const getUTCOffset = (tz: string, dateTime: string) => {
-    try {
-      const date = new Date(dateTime);
-      const offset = getTimezoneOffset(tz, date);
-      // offset is in milliseconds
-      // Positive offset means ahead of UTC (e.g., Sydney = +39600000ms = UTC+11)
-      // Negative offset means behind UTC (e.g., New York = -18000000ms = UTC-5)
-      const hours = Math.floor(Math.abs(offset) / (1000 * 60 * 60));
-      const minutes = Math.floor((Math.abs(offset) % (1000 * 60 * 60)) / (1000 * 60));
-      const sign = offset >= 0 ? '+' : '-';
-      return minutes > 0 ? `UTC${sign}${hours}:${minutes.toString().padStart(2, '0')}` : `UTC${sign}${hours}`;
-    } catch (error) {
-      return 'UTC+0';
+  // Extract UTC offset from Etc/GMT format or calculate from timezone
+  const getUTCOffset = (tz: string) => {
+    if (!tz) return 'UTC+0';
+    
+    // Handle Etc/GMT format (e.g., "Etc/GMT-11" means UTC+11)
+    if (tz.startsWith('Etc/GMT')) {
+      const match = tz.match(/Etc\/GMT([+-]?\d+(?::\d+)?)/);
+      if (match) {
+        const offset = match[1];
+        // Etc/GMT has inverted sign: Etc/GMT-11 = UTC+11
+        if (offset.startsWith('+')) {
+          return `UTC-${offset.substring(1)}`;
+        } else if (offset.startsWith('-')) {
+          return `UTC+${offset.substring(1)}`;
+        } else {
+          return `UTC+${offset}`;
+        }
+      }
     }
+    
+    // Handle plain UTC
+    if (tz === 'UTC') return 'UTC+0';
+    
+    // Fallback: return as-is
+    return tz;
   };
 
-  const utcOffset = timezone ? getUTCOffset(timezone, interviewTime) : 'UTC+0';
+  const utcOffset = getUTCOffset(timezone || 'UTC');
 
   return (
     <span 

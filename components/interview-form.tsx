@@ -39,10 +39,23 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
     // Set default reply date to today
     const today = new Date().toISOString().split("T")[0];
     
+    // Get browser timezone offset and convert to Etc/GMT format
+    const getDefaultTimezone = () => {
+      if (interview?.timezone) return interview.timezone;
+      
+      const offset = -new Date().getTimezoneOffset() / 60; // Browser offset in hours
+      if (offset === 0) return "UTC";
+      if (offset > 0) {
+        return `Etc/GMT-${Math.abs(offset)}`;
+      } else {
+        return `Etc/GMT+${Math.abs(offset)}`;
+      }
+    };
+    
     return {
       replyDate: interview?.replyDate ? interview.replyDate.split("T")[0] : today,
       interviewTime: interview?.interviewTime ? interview.interviewTime.replace("Z", "").slice(0, 16) : "",
-      timezone: interview?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+      timezone: getDefaultTimezone(),
       country: interview?.country || "",
       suggestedRole: interview?.suggestedRole || "",
       profileName: interview?.profileName || "",
@@ -358,31 +371,33 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
                 e.target.style.boxShadow = "none";
               }}
             >
-              <option value="UTC">UTC (UTC+0)</option>
-              <option value="America/New_York">New York (UTC-5/-4)</option>
-              <option value="America/Chicago">Chicago (UTC-6/-5)</option>
-              <option value="America/Denver">Denver (UTC-7/-6)</option>
-              <option value="America/Los_Angeles">Los Angeles (UTC-8/-7)</option>
-              <option value="America/Toronto">Toronto (UTC-5/-4)</option>
-              <option value="America/Mexico_City">Mexico City (UTC-6/-5)</option>
-              <option value="America/Sao_Paulo">São Paulo (UTC-3)</option>
-              <option value="Europe/London">London (UTC+0/+1)</option>
-              <option value="Europe/Paris">Paris (UTC+1/+2)</option>
-              <option value="Europe/Berlin">Berlin (UTC+1/+2)</option>
-              <option value="Europe/Madrid">Madrid (UTC+1/+2)</option>
-              <option value="Europe/Rome">Rome (UTC+1/+2)</option>
-              <option value="Europe/Amsterdam">Amsterdam (UTC+1/+2)</option>
-              <option value="Europe/Moscow">Moscow (UTC+3)</option>
-              <option value="Asia/Dubai">Dubai (UTC+4)</option>
-              <option value="Asia/Kolkata">India (UTC+5:30)</option>
-              <option value="Asia/Singapore">Singapore (UTC+8)</option>
-              <option value="Asia/Hong_Kong">Hong Kong (UTC+8)</option>
-              <option value="Asia/Shanghai">Shanghai (UTC+8)</option>
-              <option value="Asia/Tokyo">Tokyo (UTC+9)</option>
-              <option value="Asia/Seoul">Seoul (UTC+9)</option>
-              <option value="Australia/Sydney">Sydney (UTC+10/+11)</option>
-              <option value="Australia/Melbourne">Melbourne (UTC+10/+11)</option>
-              <option value="Pacific/Auckland">Auckland (UTC+12/+13)</option>
+              <option value="Etc/GMT+12">UTC-12</option>
+              <option value="Etc/GMT+11">UTC-11</option>
+              <option value="Etc/GMT+10">UTC-10 (Hawaii)</option>
+              <option value="Etc/GMT+9">UTC-9 (Alaska)</option>
+              <option value="Etc/GMT+8">UTC-8 (Los Angeles, Vancouver)</option>
+              <option value="Etc/GMT+7">UTC-7 (Denver, Phoenix)</option>
+              <option value="Etc/GMT+6">UTC-6 (Chicago, Mexico City)</option>
+              <option value="Etc/GMT+5">UTC-5 (New York, Toronto)</option>
+              <option value="Etc/GMT+4">UTC-4 (Atlantic)</option>
+              <option value="Etc/GMT+3">UTC-3 (São Paulo, Buenos Aires)</option>
+              <option value="Etc/GMT+2">UTC-2</option>
+              <option value="Etc/GMT+1">UTC-1</option>
+              <option value="UTC">UTC+0 (London, Lisbon)</option>
+              <option value="Etc/GMT-1">UTC+1 (Paris, Berlin, Rome)</option>
+              <option value="Etc/GMT-2">UTC+2 (Athens, Cairo)</option>
+              <option value="Etc/GMT-3">UTC+3 (Moscow, Istanbul)</option>
+              <option value="Etc/GMT-4">UTC+4 (Dubai, Baku)</option>
+              <option value="Etc/GMT-5">UTC+5 (Pakistan)</option>
+              <option value="Etc/GMT-5:30">UTC+5:30 (India)</option>
+              <option value="Etc/GMT-6">UTC+6 (Bangladesh)</option>
+              <option value="Etc/GMT-7">UTC+7 (Bangkok, Jakarta)</option>
+              <option value="Etc/GMT-8">UTC+8 (Singapore, Hong Kong, Beijing)</option>
+              <option value="Etc/GMT-9">UTC+9 (Tokyo, Seoul)</option>
+              <option value="Etc/GMT-10">UTC+10 (Sydney summer, Brisbane)</option>
+              <option value="Etc/GMT-11">UTC+11 (Sydney winter)</option>
+              <option value="Etc/GMT-12">UTC+12 (Auckland, Fiji)</option>
+              <option value="Etc/GMT-13">UTC+13</option>
             </select>
           </div>
 
