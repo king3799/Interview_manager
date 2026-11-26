@@ -10,10 +10,12 @@ interface Interview {
   id: string;
   replyDate: string;
   interviewTime: string;
+  timezone?: string;
   country: string;
   suggestedRole: string;
   profileName: string | null;
   intervieweeName: string | null;
+  note: string | null;
   mailUrl: string | null;
   jobUrl: string | null;
   meetingUrl: string | null;
@@ -186,6 +188,11 @@ export function InterviewDetail({ interviewId, user }: InterviewDetailProps) {
               </label>
               <p style={{ fontSize: "1rem", color: "#111827" }}>
                 {formatToLocalTime(interview.interviewTime, undefined, "yyyy-MM-dd HH:mm")}
+                {interview.timezone && (
+                  <span style={{ fontSize: "0.875rem", color: "#6b7280", marginLeft: "0.5rem" }}>
+                    ({interview.timezone})
+                  </span>
+                )}
               </p>
             </div>
 
@@ -247,6 +254,17 @@ export function InterviewDetail({ interviewId, user }: InterviewDetailProps) {
                 </label>
                 <p style={{ fontSize: "1rem", color: "#111827" }}>
                   {interview.intervieweeName}
+                </p>
+              </div>
+            )}
+
+            {interview.note && (
+              <div>
+                <label style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#6b7280", marginBottom: "0.5rem" }}>
+                  Note
+                </label>
+                <p style={{ fontSize: "1rem", color: "#111827", whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+                  {interview.note}
                 </p>
               </div>
             )}
