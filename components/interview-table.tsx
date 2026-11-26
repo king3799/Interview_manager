@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { formatToLocalTime, formatDate, formatStoredTime } from "@/lib/timezone";
+import { formatDate } from "@/lib/timezone";
 import { DeleteInterviewButton } from "./delete-interview-button";
+import { InterviewTime } from "./interview-time";
 
 interface Interview {
   id: string;
@@ -181,12 +182,11 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
                     minWidth: 0,
                     maxWidth: "180px"
                   }}>
-                    <span 
-                      title={`Local time: ${formatToLocalTime(interview.interviewTime, undefined, "yyyy-MM-dd HH:mm")}`}
-                      style={{ cursor: "help" }}
-                    >
-                      {formatStoredTime(interview.interviewTime, "yyyy-MM-dd HH:mm")}
-                    </span>
+                    <InterviewTime 
+                      interviewTime={interview.interviewTime}
+                      timezone={interview.timezone}
+                      format="yyyy-MM-dd HH:mm"
+                    />
                   </td>
                   <td style={{ 
                     padding: "1rem", 

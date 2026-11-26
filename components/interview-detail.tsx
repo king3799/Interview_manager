@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { formatToLocalTime, formatDate } from "@/lib/timezone";
+import { formatDate } from "@/lib/timezone";
 import { DeleteInterviewButton } from "./delete-interview-button";
+import { InterviewTime } from "./interview-time";
 
 interface Interview {
   id: string;
@@ -187,12 +188,12 @@ export function InterviewDetail({ interviewId, user }: InterviewDetailProps) {
                 Interview Time
               </label>
               <p style={{ fontSize: "1rem", color: "#111827" }}>
-                {formatToLocalTime(interview.interviewTime, undefined, "yyyy-MM-dd HH:mm")}
-                {interview.timezone && (
-                  <span style={{ fontSize: "0.875rem", color: "#6b7280", marginLeft: "0.5rem" }}>
-                    ({interview.timezone})
-                  </span>
-                )}
+                <InterviewTime 
+                  interviewTime={interview.interviewTime}
+                  timezone={interview.timezone}
+                  format="yyyy-MM-dd HH:mm"
+                  showTimezone={true}
+                />
               </p>
             </div>
 
