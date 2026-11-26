@@ -88,13 +88,47 @@ export default function InterviewEditPage() {
     <div style={{ minHeight: "100vh", background: "#f9fafb", display: "flex", flexDirection: "column" }}>
       <NavBar user={session.user} />
       <main style={{ flex: 1, maxWidth: "80rem", width: "100%", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column" }}>
-        <div style={{ marginBottom: "1.5rem" }}>
-          <h1 style={{ fontSize: "1.875rem", fontWeight: "700", color: "#111827", marginBottom: "0.5rem" }}>
-            Edit Interview
-          </h1>
-          <p style={{ color: "#6b7280", fontSize: "0.875rem" }}>
-            Update the interview details below.
-          </p>
+        <div style={{ marginBottom: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <h1 style={{ fontSize: "1.875rem", fontWeight: "700", color: "#111827", marginBottom: "0.5rem" }}>
+              {interview.profileName}
+            </h1>
+            <div style={{ display: "flex", gap: "1rem", fontSize: "0.875rem", color: "#6b7280" }}>
+              <span>
+                <strong>Time:</strong> {new Date(interview.interviewTime).toLocaleString('en-US', { 
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  timeZone: interview.timezone
+                })}
+              </span>
+              <span>•</span>
+              <span>
+                <strong>Role:</strong> {interview.suggestedRole}
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={() => router.push(`/interviews/${params.id}`)}
+            style={{
+              padding: "0.5rem 1rem",
+              background: "#059669",
+              color: "white",
+              border: "none",
+              borderRadius: "0.5rem",
+              fontSize: "0.875rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "background 0.2s",
+              whiteSpace: "nowrap"
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = "#047857"}
+            onMouseLeave={(e) => e.currentTarget.style.background = "#059669"}
+          >
+            Back
+          </button>
         </div>
 
         <div style={{ flex: 1, background: "white", borderRadius: "0.5rem", boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)", padding: "2rem", display: "flex", flexDirection: "column" }}>
