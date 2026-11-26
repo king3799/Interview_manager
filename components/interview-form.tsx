@@ -461,7 +461,6 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
             >
               <option value="NOT">Not Started</option>
               <option value="SCHEDULED">Scheduled</option>
-              <option value="RESCHEDULED">Rescheduled</option>
               <option value="PHONE_CALL">Phone Call</option>
               <option value="TEST">Test</option>
               <option value="INITIAL">Initial Interview</option>
