@@ -66,6 +66,7 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
   const getProgressStyle = (progress: string) => {
     const styles: Record<string, { bg: string; color: string; label: string }> = {
       SCHEDULED: { bg: "#dbeafe", color: "#1e40af", label: "Scheduled" },
+      RESCHEDULED: { bg: "#fef3c7", color: "#92400e", label: "Rescheduled" },
       PHONE_CALL: { bg: "#ddd6fe", color: "#5b21b6", label: "Phone Call" },
       TEST: { bg: "#fef3c7", color: "#92400e", label: "Test" },
       INITIAL: { bg: "#e0e7ff", color: "#3730a3", label: "Initial" },
