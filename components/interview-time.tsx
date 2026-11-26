@@ -37,6 +37,9 @@ export function InterviewTime({
   const getUTCOffset = (tz: string) => {
     if (!tz) return 'UTC+0';
     
+    // Handle special timezones
+    if (tz === 'Asia/Kolkata') return 'UTC+5:30';
+    
     // Handle Etc/GMT format (e.g., "Etc/GMT-11" means UTC+11)
     if (tz.startsWith('Etc/GMT')) {
       const match = tz.match(/Etc\/GMT([+-]?\d+(?::\d+)?)/);

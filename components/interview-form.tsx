@@ -389,7 +389,7 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
               <option value="Etc/GMT-3">UTC+3 (Moscow, Istanbul)</option>
               <option value="Etc/GMT-4">UTC+4 (Dubai, Baku)</option>
               <option value="Etc/GMT-5">UTC+5 (Pakistan)</option>
-              <option value="Etc/GMT-5:30">UTC+5:30 (India)</option>
+              <option value="Asia/Kolkata">UTC+5:30 (India)</option>
               <option value="Etc/GMT-6">UTC+6 (Bangladesh)</option>
               <option value="Etc/GMT-7">UTC+7 (Bangkok, Jakarta)</option>
               <option value="Etc/GMT-8">UTC+8 (Singapore, Hong Kong, Beijing)</option>
