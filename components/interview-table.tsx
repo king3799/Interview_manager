@@ -37,6 +37,7 @@ interface InterviewTableProps {
 
 export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, sortConfig, onSort }: InterviewTableProps) {
   const isViewer = user.role === "VIEWER";
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
   const getSortIcon = (columnKey: "replyDate" | "interviewTime" | "country" | "createdBy") => {
     if (!sortConfig || sortConfig.key !== columnKey) {
@@ -157,8 +158,20 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
           <tbody>
             {interviews.map((interview, index) => {
               const progressStyle = getProgressStyle(interview.progress);
+              const isHovered = hoveredRow === interview.id;
               return (
-                <tr key={interview.id} style={{ borderBottom: "1px solid #e5e7eb" }}>
+                <tr 
+                  key={interview.id} 
+                  style={{ 
+                    borderBottom: "1px solid #e5e7eb",
+                    background: isHovered ? "#f9fafb" : "white",
+                    cursor: "pointer",
+                    transition: "background 0.15s"
+                  }}
+                  onClick={() => window.location.href = `/interviews/${interview.id}`}
+                  onMouseEnter={() => setHoveredRow(interview.id)}
+                  onMouseLeave={() => setHoveredRow(null)}
+                >
                   <td style={{ padding: "1rem", color: "#6b7280", fontWeight: "500", whiteSpace: "nowrap" }}>
                     {startIndex + index + 1}
                   </td>
@@ -248,7 +261,10 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
                     </td>
                   )}
                   <td style={{ padding: "1rem", textAlign: "right", whiteSpace: "nowrap" }}>
-                    <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
+                    <div 
+                      style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Link
                         href={`/interviews/${interview.id}`}
                         style={{
