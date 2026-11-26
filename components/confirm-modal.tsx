@@ -142,6 +142,7 @@ export function ConfirmModal({
               textAlign: "center",
               wordWrap: "break-word",
               overflowWrap: "break-word",
+              whiteSpace: "normal",
             }}
           >
             {message}

@@ -34,6 +34,7 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
     return {
       replyDate: interview?.replyDate ? interview.replyDate.split("T")[0] : today,
       interviewTime: interview?.interviewTime ? interview.interviewTime.replace("Z", "").slice(0, 16) : "",
+      timezone: interview?.interviewTime ? "UTC" : Intl.DateTimeFormat().resolvedOptions().timeZone,
       country: interview?.country || "",
       suggestedRole: interview?.suggestedRole || "",
       profileName: interview?.profileName || "",
@@ -202,8 +203,8 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
           </div>
         </div>
 
-        {/* Row 1: Reply Date, Interview Time, Progress */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
+        {/* Row 1: Reply Date, Interview Time, Timezone, Progress */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
 
           <div>
             <label htmlFor="interviewTime" style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#374151", marginBottom: "0.5rem" }}>
@@ -234,6 +235,47 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
                 e.target.style.boxShadow = "none";
               }}
             />
+          </div>
+
+          <div>
+            <label htmlFor="timezone" style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#374151", marginBottom: "0.5rem" }}>
+              Timezone <span style={{ color: "#dc2626" }}>*</span>
+            </label>
+            <select
+              id="timezone"
+              name="timezone"
+              value={formData.timezone}
+              onChange={handleChange}
+              required
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                border: "2px solid #d1d5db",
+                borderRadius: "0.5rem",
+                fontSize: "0.875rem",
+                outline: "none",
+                transition: "all 0.2s"
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "#059669";
+                e.target.style.boxShadow = "0 0 0 3px rgba(5, 150, 105, 0.1)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "#d1d5db";
+                e.target.style.boxShadow = "none";
+              }}
+            >
+              <option value="UTC">UTC (GMT+0)</option>
+              <option value="America/New_York">New York (GMT-5/-4)</option>
+              <option value="America/Los_Angeles">Los Angeles (GMT-8/-7)</option>
+              <option value="Europe/London">London (GMT+0/+1)</option>
+              <option value="Europe/Paris">Paris (GMT+1/+2)</option>
+              <option value="Asia/Seoul">Seoul (GMT+9)</option>
+              <option value="Asia/Tokyo">Tokyo (GMT+9)</option>
+              <option value="Asia/Shanghai">Shanghai (GMT+8)</option>
+              <option value="Asia/Dubai">Dubai (GMT+4)</option>
+              <option value="Australia/Sydney">Sydney (GMT+10/+11)</option>
+            </select>
           </div>
 
           <div>

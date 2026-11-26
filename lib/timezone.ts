@@ -19,3 +19,13 @@ export function formatDate(date: Date | string, formatStr: string = "yyyy-MM-dd"
   const dateObj = typeof date === "string" ? new Date(date) : date;
   return format(dateObj, formatStr);
 }
+
+// Format stored time as-is (without timezone conversion)
+export function formatStoredTime(
+  utcDate: Date | string,
+  formatStr: string = "yyyy-MM-dd HH:mm"
+): string {
+  const date = typeof utcDate === "string" ? new Date(utcDate) : utcDate;
+  // Format in UTC to show the stored time
+  return formatInTimeZone(date, "UTC", formatStr);
+}

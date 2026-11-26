@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { formatToLocalTime, formatDate } from "@/lib/timezone";
+import { formatToLocalTime, formatDate, formatStoredTime } from "@/lib/timezone";
 import { DeleteInterviewButton } from "./delete-interview-button";
 
 interface Interview {
@@ -180,7 +180,12 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
                     minWidth: 0,
                     maxWidth: "180px"
                   }}>
-                    {formatToLocalTime(interview.interviewTime, undefined, "yyyy-MM-dd HH:mm")}
+                    <span 
+                      title={`Local time: ${formatToLocalTime(interview.interviewTime, undefined, "yyyy-MM-dd HH:mm")}`}
+                      style={{ cursor: "help" }}
+                    >
+                      {formatStoredTime(interview.interviewTime, "yyyy-MM-dd HH:mm")}
+                    </span>
                   </td>
                   <td style={{ 
                     padding: "1rem", 
