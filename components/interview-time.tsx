@@ -1,7 +1,5 @@
 "use client";
 
-import { formatInTimeZone } from "date-fns-tz";
-
 interface InterviewTimeProps {
   interviewTime: string;
   timezone?: string;
@@ -12,40 +10,31 @@ interface InterviewTimeProps {
 
 export function InterviewTime({ 
   interviewTime, 
-  timezone = "UTC", 
-  format = "yyyy-MM-dd HH:mm",
+  timezone, 
+  format: formatStr = "yyyy-MM-dd HH:mm",
   showTimezone = false,
   style = {}
 }: InterviewTimeProps) {
-  // Ensure the datetime string is parsed as UTC
-  const ensureUTC = (dateStr: string) => {
-    // If it already has timezone info (Z or +/-), use as is
-    if (dateStr.endsWith('Z') || /[+-]\d{2}:\d{2}$/.test(dateStr)) {
-      return dateStr;
-    }
-    // If no timezone info, assume UTC and add Z
-    return dateStr.replace(' ', 'T') + 'Z';
+  // Extract datetime parts directly from the string without Date conversion
+  const formatDateTime = (dateStr: string) => {
+    // Expected format from DB: "2026-11-30T01:30:00.000Z" or similar
+    const date = dateStr.substring(0, 10); // YYYY-MM-DD
+    const time = dateStr.substring(11, 16); // HH:mm
+    return `${date} ${time}`;
   };
 
-  const utcDateStr = ensureUTC(interviewTime);
-  const date = new Date(utcDateStr);
-  
-  // Format time in the stored timezone
-  const storedTime = formatInTimeZone(date, timezone, format);
+  const formattedTime = formatDateTime(interviewTime);
 
-  // Extract UTC offset from Etc/GMT format
-  const getUTCOffset = (tz: string) => {
-    if (!tz) return 'UTC+0';
+  // Extract UTC offset from Etc/GMT format for display
+  const getUTCOffset = (tz?: string) => {
+    if (!tz) return '';
     
-    // Handle special timezones
     if (tz === 'Asia/Kolkata') return 'UTC+5:30';
     
-    // Handle Etc/GMT format (e.g., "Etc/GMT-11" means UTC+11)
     if (tz.startsWith('Etc/GMT')) {
-      const match = tz.match(/Etc\/GMT([+-]?\d+(?::\d+)?)/);
+      const match = tz.match(/Etc\/GMT([+-]?\d+)/);
       if (match) {
         const offset = match[1];
-        // Etc/GMT has inverted sign: Etc/GMT-11 = UTC+11
         if (offset.startsWith('+')) {
           return `UTC-${offset.substring(1)}`;
         } else if (offset.startsWith('-')) {
@@ -56,19 +45,17 @@ export function InterviewTime({
       }
     }
     
-    // Handle plain UTC
     if (tz === 'UTC') return 'UTC+0';
     
-    // Fallback: return as-is
-    return tz;
+    return '';
   };
 
   const utcOffset = getUTCOffset(timezone);
 
   return (
     <span style={style}>
-      {storedTime}
-      {showTimezone && (
+      {formattedTime}
+      {showTimezone && utcOffset && (
         <span style={{ fontSize: "0.75rem", color: "#6b7280", marginLeft: "0.5rem" }}>
           ({utcOffset})
         </span>
