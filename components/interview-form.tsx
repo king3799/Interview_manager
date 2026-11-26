@@ -358,31 +358,31 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
                 e.target.style.boxShadow = "none";
               }}
             >
-              <option value="UTC">UTC (GMT+0)</option>
-              <option value="America/New_York">America/New_York (GMT-5/-4)</option>
-              <option value="America/Chicago">America/Chicago (GMT-6/-5)</option>
-              <option value="America/Denver">America/Denver (GMT-7/-6)</option>
-              <option value="America/Los_Angeles">America/Los_Angeles (GMT-8/-7)</option>
-              <option value="America/Toronto">America/Toronto (GMT-5/-4)</option>
-              <option value="America/Mexico_City">America/Mexico_City (GMT-6/-5)</option>
-              <option value="America/Sao_Paulo">America/Sao_Paulo (GMT-3)</option>
-              <option value="Europe/London">Europe/London (GMT+0/+1)</option>
-              <option value="Europe/Paris">Europe/Paris (GMT+1/+2)</option>
-              <option value="Europe/Berlin">Europe/Berlin (GMT+1/+2)</option>
-              <option value="Europe/Madrid">Europe/Madrid (GMT+1/+2)</option>
-              <option value="Europe/Rome">Europe/Rome (GMT+1/+2)</option>
-              <option value="Europe/Amsterdam">Europe/Amsterdam (GMT+1/+2)</option>
-              <option value="Europe/Moscow">Europe/Moscow (GMT+3)</option>
-              <option value="Asia/Dubai">Asia/Dubai (GMT+4)</option>
-              <option value="Asia/Kolkata">Asia/Kolkata (GMT+5:30)</option>
-              <option value="Asia/Singapore">Asia/Singapore (GMT+8)</option>
-              <option value="Asia/Hong_Kong">Asia/Hong_Kong (GMT+8)</option>
-              <option value="Asia/Shanghai">Asia/Shanghai (GMT+8)</option>
-              <option value="Asia/Tokyo">Asia/Tokyo (GMT+9)</option>
-              <option value="Asia/Seoul">Asia/Seoul (GMT+9)</option>
-              <option value="Australia/Sydney">Australia/Sydney (GMT+10/+11)</option>
-              <option value="Australia/Melbourne">Australia/Melbourne (GMT+10/+11)</option>
-              <option value="Pacific/Auckland">Pacific/Auckland (GMT+12/+13)</option>
+              <option value="UTC">UTC (UTC+0)</option>
+              <option value="America/New_York">New York (UTC-5/-4)</option>
+              <option value="America/Chicago">Chicago (UTC-6/-5)</option>
+              <option value="America/Denver">Denver (UTC-7/-6)</option>
+              <option value="America/Los_Angeles">Los Angeles (UTC-8/-7)</option>
+              <option value="America/Toronto">Toronto (UTC-5/-4)</option>
+              <option value="America/Mexico_City">Mexico City (UTC-6/-5)</option>
+              <option value="America/Sao_Paulo">São Paulo (UTC-3)</option>
+              <option value="Europe/London">London (UTC+0/+1)</option>
+              <option value="Europe/Paris">Paris (UTC+1/+2)</option>
+              <option value="Europe/Berlin">Berlin (UTC+1/+2)</option>
+              <option value="Europe/Madrid">Madrid (UTC+1/+2)</option>
+              <option value="Europe/Rome">Rome (UTC+1/+2)</option>
+              <option value="Europe/Amsterdam">Amsterdam (UTC+1/+2)</option>
+              <option value="Europe/Moscow">Moscow (UTC+3)</option>
+              <option value="Asia/Dubai">Dubai (UTC+4)</option>
+              <option value="Asia/Kolkata">India (UTC+5:30)</option>
+              <option value="Asia/Singapore">Singapore (UTC+8)</option>
+              <option value="Asia/Hong_Kong">Hong Kong (UTC+8)</option>
+              <option value="Asia/Shanghai">Shanghai (UTC+8)</option>
+              <option value="Asia/Tokyo">Tokyo (UTC+9)</option>
+              <option value="Asia/Seoul">Seoul (UTC+9)</option>
+              <option value="Australia/Sydney">Sydney (UTC+10/+11)</option>
+              <option value="Australia/Melbourne">Melbourne (UTC+10/+11)</option>
+              <option value="Pacific/Auckland">Auckland (UTC+12/+13)</option>
             </select>
           </div>
 
