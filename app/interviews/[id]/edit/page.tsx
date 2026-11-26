@@ -2,15 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { NavBar } from "@/components/nav-bar";
 import { InterviewForm } from "@/components/interview-form";
 
 export default function InterviewEditPage() {
+  const { data: session, status } = useSession();
   const params = useParams();
   const router = useRouter();
   const [interview, setInterview] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     const fetchInterview = async () => {
@@ -30,14 +38,15 @@ export default function InterviewEditPage() {
       }
     };
 
-    if (params.id) {
+    if (params.id && status === "authenticated") {
       fetchInterview();
     }
-  }, [params.id]);
+  }, [params.id, status]);
 
-  if (loading) {
+  if (status === "loading" || loading) {
     return (
-      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+      <div style={{ minHeight: "100vh", background: "#f9fafb", display: "flex", flexDirection: "column" }}>
+        {session?.user && <NavBar user={session.user} />}
         <div style={{ textAlign: "center", padding: "3rem" }}>
           <p style={{ color: "#6b7280" }}>Loading...</p>
         </div>
@@ -45,9 +54,14 @@ export default function InterviewEditPage() {
     );
   }
 
+  if (!session?.user) {
+    return null;
+  }
+
   if (error || !interview) {
     return (
-      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+      <div style={{ minHeight: "100vh", background: "#f9fafb", display: "flex", flexDirection: "column" }}>
+        <NavBar user={session.user} />
         <div style={{ textAlign: "center", padding: "3rem" }}>
           <p style={{ color: "#ef4444", marginBottom: "1rem" }}>{error || "Interview not found"}</p>
           <button
@@ -72,6 +86,7 @@ export default function InterviewEditPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#f9fafb", display: "flex", flexDirection: "column" }}>
+      <NavBar user={session.user} />
       <main style={{ flex: 1, maxWidth: "80rem", width: "100%", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column" }}>
         <div style={{ marginBottom: "1.5rem" }}>
           <h1 style={{ fontSize: "1.875rem", fontWeight: "700", color: "#111827", marginBottom: "0.5rem" }}>
