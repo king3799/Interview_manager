@@ -60,7 +60,7 @@ export function InterviewList({ user }: InterviewListProps) {
 
   useEffect(() => {
     fetchInterviews();
-    if (!isViewer) {
+    if (user.role === "ADMIN") {
       fetchUsers();
     }
   }, [searchParams]);
@@ -93,8 +93,9 @@ export function InterviewList({ user }: InterviewListProps) {
         const data = await response.json();
         setUsers(data);
       }
+      // Silently ignore 403 errors (non-admin users)
     } catch (error) {
-      console.error("Error fetching users:", error);
+      // Silently ignore errors
     }
   };
 
