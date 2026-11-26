@@ -39,7 +39,7 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
   const getSortIcon = (columnKey: "replyDate" | "interviewTime" | "country" | "createdBy") => {
     if (!sortConfig || sortConfig.key !== columnKey) {
       return (
-        <svg style={{ width: "1rem", height: "1rem", display: "inline", marginLeft: "0.25rem", opacity: 0.3 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg style={{ width: "0.875rem", height: "0.875rem", opacity: 0.3, flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
         </svg>
       );
@@ -47,14 +47,14 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
 
     if (sortConfig.direction === "asc") {
       return (
-        <svg style={{ width: "1rem", height: "1rem", display: "inline", marginLeft: "0.25rem" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg style={{ width: "0.875rem", height: "0.875rem", flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
         </svg>
       );
     }
 
     return (
-      <svg style={{ width: "1rem", height: "1rem", display: "inline", marginLeft: "0.25rem" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg style={{ width: "0.875rem", height: "0.875rem", flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
       </svg>
     );
@@ -82,34 +82,74 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
             <tr>
               <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", width: "60px" }}>No.</th>
               <th 
-                style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", cursor: "pointer", userSelect: "none" }}
+                style={{ 
+                  padding: "0.75rem 1rem", 
+                  textAlign: "left", 
+                  fontWeight: "600", 
+                  color: "#374151", 
+                  cursor: "pointer", 
+                  userSelect: "none",
+                  whiteSpace: "nowrap"
+                }}
                 onClick={() => onSort && onSort("replyDate")}
               >
-                Reply Date {getSortIcon("replyDate")}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                  Reply Date {getSortIcon("replyDate")}
+                </div>
               </th>
               <th 
-                style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", cursor: "pointer", userSelect: "none" }}
+                style={{ 
+                  padding: "0.75rem 1rem", 
+                  textAlign: "left", 
+                  fontWeight: "600", 
+                  color: "#374151", 
+                  cursor: "pointer", 
+                  userSelect: "none",
+                  whiteSpace: "nowrap"
+                }}
                 onClick={() => onSort && onSort("interviewTime")}
               >
-                Interview Time {getSortIcon("interviewTime")}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                  Interview Time {getSortIcon("interviewTime")}
+                </div>
               </th>
               <th 
-                style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", cursor: "pointer", userSelect: "none" }}
+                style={{ 
+                  padding: "0.75rem 1rem", 
+                  textAlign: "left", 
+                  fontWeight: "600", 
+                  color: "#374151", 
+                  cursor: "pointer", 
+                  userSelect: "none",
+                  whiteSpace: "nowrap"
+                }}
                 onClick={() => onSort && onSort("country")}
               >
-                Country {getSortIcon("country")}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                  Country {getSortIcon("country")}
+                </div>
               </th>
-              <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151" }}>Role</th>
-              <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151" }}>Progress</th>
+              <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", whiteSpace: "nowrap" }}>Role</th>
+              <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", whiteSpace: "nowrap" }}>Progress</th>
               {!isViewer && (
                 <th 
-                  style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", cursor: "pointer", userSelect: "none" }}
+                  style={{ 
+                    padding: "0.75rem 1rem", 
+                    textAlign: "left", 
+                    fontWeight: "600", 
+                    color: "#374151", 
+                    cursor: "pointer", 
+                    userSelect: "none",
+                    whiteSpace: "nowrap"
+                  }}
                   onClick={() => onSort && onSort("createdBy")}
                 >
-                  Created By {getSortIcon("createdBy")}
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                    Created By {getSortIcon("createdBy")}
+                  </div>
                 </th>
               )}
-              <th style={{ padding: "0.75rem 1rem", textAlign: "right", fontWeight: "600", color: "#374151" }}>Actions</th>
+              <th style={{ padding: "0.75rem 1rem", textAlign: "right", fontWeight: "600", color: "#374151", whiteSpace: "nowrap" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
