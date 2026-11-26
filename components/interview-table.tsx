@@ -193,12 +193,13 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, so
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
                     minWidth: 0,
-                    maxWidth: "180px"
+                    maxWidth: "220px"
                   }}>
                     <InterviewTime 
                       interviewTime={interview.interviewTime}
                       timezone={interview.timezone}
                       format="yyyy-MM-dd HH:mm"
+                      showTimezone={true}
                     />
                   </td>
                   <td style={{ 
