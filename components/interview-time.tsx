@@ -1,6 +1,6 @@
 "use client";
 
-import { formatStoredTime, formatToLocalTime } from "@/lib/timezone";
+import { formatInTimeZone } from "date-fns-tz";
 
 interface InterviewTimeProps {
   interviewTime: string;
@@ -12,16 +12,21 @@ interface InterviewTimeProps {
 
 export function InterviewTime({ 
   interviewTime, 
-  timezone, 
+  timezone = "UTC", 
   format = "yyyy-MM-dd HH:mm",
   showTimezone = false,
   style = {}
 }: InterviewTimeProps) {
-  const storedTime = formatStoredTime(interviewTime, format);
-  const localTime = formatToLocalTime(interviewTime, undefined, format);
+  const date = new Date(interviewTime);
   const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  
+  // Format time in the stored timezone
+  const storedTime = formatInTimeZone(date, timezone, format);
+  
+  // Format time in browser's local timezone (for tooltip)
+  const localTime = formatInTimeZone(date, browserTimezone, format);
 
-  // Extract UTC offset from Etc/GMT format or calculate from timezone
+  // Extract UTC offset from Etc/GMT format
   const getUTCOffset = (tz: string) => {
     if (!tz) return 'UTC+0';
     
@@ -48,7 +53,7 @@ export function InterviewTime({
     return tz;
   };
 
-  const utcOffset = getUTCOffset(timezone || 'UTC');
+  const utcOffset = getUTCOffset(timezone);
 
   return (
     <span 
@@ -59,7 +64,7 @@ export function InterviewTime({
       }}
     >
       {storedTime}
-      {showTimezone && timezone && (
+      {showTimezone && (
         <span style={{ fontSize: "0.75rem", color: "#6b7280", marginLeft: "0.5rem" }}>
           ({utcOffset})
         </span>
