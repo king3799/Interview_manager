@@ -18,10 +18,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if BLOB_READ_WRITE_TOKEN is set
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+    console.log("Blob token exists:", !!blobToken);
+    console.log("Blob token preview:", blobToken ? blobToken.substring(0, 30) + "..." : "MISSING");
+    
+    if (!blobToken) {
       console.error("BLOB_READ_WRITE_TOKEN is not set in environment variables");
       return NextResponse.json(
-        { error: "Blob storage is not configured. Please contact administrator." },
+        { error: "Blob storage token is missing. Please redeploy or contact administrator." },
         { status: 500 }
       );
     }
