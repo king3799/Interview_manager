@@ -17,6 +17,9 @@ interface Interview {
   profileName: string | null;
   intervieweeName: string | null;
   note: string | null;
+  resumeUrl: string | null;
+  resumeFilename: string | null;
+  resumeSize: number | null;
   mailUrl: string | null;
   jobUrl: string | null;
   meetingUrl: string | null;
@@ -282,6 +285,65 @@ export function InterviewDetail({ interviewId, user }: InterviewDetailProps) {
             )}
           </div>
         </div>
+
+        {/* Resume Section */}
+        {interview.resumeUrl && interview.resumeFilename && (
+          <div style={{ marginTop: "2rem", paddingTop: "2rem", borderTop: "1px solid #e5e7eb" }}>
+            <h3 style={{ fontSize: "1.125rem", fontWeight: "600", color: "#111827", marginBottom: "1rem" }}>
+              Resume
+            </h3>
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "1rem",
+              padding: "1rem",
+              background: "#f0fdf4",
+              border: "2px solid #bbf7d0",
+              borderRadius: "0.5rem"
+            }}>
+              <svg style={{ width: "2rem", height: "2rem", color: "#059669", flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: "1rem", fontWeight: "600", color: "#111827", marginBottom: "0.25rem" }}>
+                  {interview.resumeFilename}
+                </p>
+                {interview.resumeSize && (
+                  <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>
+                    {(interview.resumeSize / 1024).toFixed(2)} KB
+                  </p>
+                )}
+              </div>
+              <a
+                href={interview.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  padding: "0.5rem 1rem",
+                  background: "#059669",
+                  color: "white",
+                  borderRadius: "0.5rem",
+                  textDecoration: "none",
+                  fontWeight: "600",
+                  fontSize: "0.875rem",
+                  transition: "background 0.2s",
+                  whiteSpace: "nowrap"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "#047857"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "#059669"}
+              >
+                <svg style={{ width: "1rem", height: "1rem" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+              </a>
+            </div>
+          </div>
+        )}
 
         {/* URLs Section */}
         {(interview.mailUrl || interview.jobUrl || interview.meetingUrl) && (

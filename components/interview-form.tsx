@@ -15,6 +15,9 @@ interface InterviewFormProps {
     profileName?: string | null;
     intervieweeName?: string | null;
     note?: string | null;
+    resumeUrl?: string | null;
+    resumeFilename?: string | null;
+    resumeSize?: number | null;
     mailUrl: string | null;
     jobUrl: string | null;
     meetingUrl: string | null;
@@ -27,6 +30,10 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [uploadingResume, setUploadingResume] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(interview?.resumeUrl || null);
+  const [resumeFilename, setResumeFilename] = useState<string | null>(interview?.resumeFilename || null);
 
   const [formData, setFormData] = useState(() => {
     // Set default reply date to today
@@ -55,19 +62,104 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
     });
   };
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    if (!allowedTypes.includes(file.type)) {
+      setError("Only PDF and DOCX files are allowed");
+      e.target.value = "";
+      return;
+    }
+
+    // Validate file size (1MB)
+    if (file.size > 1024 * 1024) {
+      setError("File size must be less than 1MB");
+      e.target.value = "";
+      return;
+    }
+
+    setError("");
+    setResumeFile(file);
+  };
+
+  const handleRemoveResume = async () => {
+    if (resumeUrl) {
+      try {
+        await fetch(`/api/upload/delete?url=${encodeURIComponent(resumeUrl)}`, {
+          method: "DELETE",
+        });
+      } catch (error) {
+        console.error("Error deleting resume:", error);
+      }
+    }
+    setResumeUrl(null);
+    setResumeFilename(null);
+    setResumeFile(null);
+  };
+
+  const uploadResume = async (): Promise<{ url: string; filename: string; size: number } | null> => {
+    if (!resumeFile) return null;
+
+    setUploadingResume(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", resumeFile);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to upload resume");
+      }
+
+      const data = await response.json();
+      return { url: data.url, filename: data.filename, size: data.size };
+    } catch (error) {
+      console.error("Error uploading resume:", error);
+      setError(error instanceof Error ? error.message : "Failed to upload resume");
+      return null;
+    } finally {
+      setUploadingResume(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
+      // Upload resume first if there's a new file
+      let resumeData = null;
+      if (resumeFile) {
+        resumeData = await uploadResume();
+        if (!resumeData) {
+          setLoading(false);
+          return; // Upload failed, error already set
+        }
+      }
+
+      // If there's an existing resume and no new file, keep the existing resume
+      const submitData = {
+        ...formData,
+        resumeUrl: resumeData?.url || resumeUrl,
+        resumeFilename: resumeData?.filename || resumeFilename,
+        resumeSize: resumeData?.size || interview?.resumeSize,
+      };
+
       const url = mode === "create" ? "/api/interviews" : `/api/interviews/${interview?.id}`;
       const method = mode === "create" ? "POST" : "PUT";
 
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submitData),
       });
 
       if (response.ok) {
@@ -416,6 +508,81 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
           />
         </div>
 
+        {/* Row 4.5: Resume Upload */}
+        <div style={{ marginBottom: "1.5rem" }}>
+          <label htmlFor="resume" style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#374151", marginBottom: "0.5rem" }}>
+            Resume (PDF or DOCX, max 1MB)
+          </label>
+          
+          {/* Show existing resume or file input */}
+          {resumeUrl || resumeFile ? (
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "0.75rem",
+              padding: "0.75rem",
+              background: "#f0fdf4",
+              border: "2px solid #bbf7d0",
+              borderRadius: "0.5rem"
+            }}>
+              <svg style={{ width: "1.25rem", height: "1.25rem", color: "#059669", flexShrink: 0 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span style={{ flex: 1, fontSize: "0.875rem", color: "#374151" }}>
+                {resumeFile?.name || resumeFilename || "Resume attached"}
+              </span>
+              <button
+                type="button"
+                onClick={handleRemoveResume}
+                style={{
+                  padding: "0.25rem 0.75rem",
+                  background: "#fef2f2",
+                  color: "#dc2626",
+                  border: "1px solid #fecaca",
+                  borderRadius: "0.375rem",
+                  fontSize: "0.75rem",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "#fee2e2"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "#fef2f2"}
+              >
+                Remove
+              </button>
+            </div>
+          ) : (
+            <div style={{ position: "relative" }}>
+              <input
+                type="file"
+                id="resume"
+                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                onChange={handleFileChange}
+                style={{
+                  width: "100%",
+                  padding: "0.5rem",
+                  border: "2px dashed #d1d5db",
+                  borderRadius: "0.5rem",
+                  fontSize: "0.875rem",
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#059669";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(5, 150, 105, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#d1d5db";
+                  e.target.style.boxShadow = "none";
+                }}
+              />
+              <p style={{ fontSize: "0.75rem", color: "#6b7280", marginTop: "0.5rem" }}>
+                Supported formats: PDF, DOCX (max 1MB)
+              </p>
+            </div>
+          )}
+        </div>
+
         {/* Row 5: Mail URL */}
         <div style={{ marginBottom: "1.5rem" }}>
           <label htmlFor="mailUrl" style={{ display: "block", fontSize: "0.875rem", fontWeight: "600", color: "#374151", marginBottom: "0.5rem" }}>
@@ -536,26 +703,26 @@ export function InterviewForm({ interview, mode }: InterviewFormProps) {
         </button>
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || uploadingResume}
           style={{
             padding: "0.625rem 1.5rem",
-            background: loading ? "#6ee7b7" : "#059669",
+            background: (loading || uploadingResume) ? "#6ee7b7" : "#059669",
             color: "white",
             border: "none",
             borderRadius: "0.5rem",
             fontSize: "0.875rem",
             fontWeight: "600",
-            cursor: loading ? "not-allowed" : "pointer",
+            cursor: (loading || uploadingResume) ? "not-allowed" : "pointer",
             transition: "all 0.2s"
           }}
           onMouseEnter={(e) => {
-            if (!loading) e.currentTarget.style.background = "#047857";
+            if (!loading && !uploadingResume) e.currentTarget.style.background = "#047857";
           }}
           onMouseLeave={(e) => {
-            if (!loading) e.currentTarget.style.background = "#059669";
+            if (!loading && !uploadingResume) e.currentTarget.style.background = "#059669";
           }}
         >
-          {loading ? "Saving..." : mode === "create" ? "Create Interview" : "Update Interview"}
+          {uploadingResume ? "Uploading resume..." : loading ? "Saving..." : mode === "create" ? "Create Interview" : "Update Interview"}
         </button>
       </div>
     </form>

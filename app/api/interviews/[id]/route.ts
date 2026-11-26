@@ -18,6 +18,7 @@ export async function GET(
       `SELECT 
         i.id, i."replyDate", i."interviewTime", i.timezone, i.country, 
         i."suggestedRole", i."profileName", i."intervieweeName", i.note,
+        i.resume_url, i.resume_filename, i.resume_size,
         i."mailUrl", i."jobUrl", i."meetingUrl",
         i.progress, i."createdBy", i."createdAt", i."updatedAt",
         u.id as "creator_id", u.username as "creator_username", u.name as "creator_name"
@@ -47,6 +48,9 @@ export async function GET(
       profileName: row.profileName,
       intervieweeName: row.intervieweeName,
       note: row.note,
+      resumeUrl: row.resume_url,
+      resumeFilename: row.resume_filename,
+      resumeSize: row.resume_size,
       mailUrl: row.mailUrl,
       jobUrl: row.jobUrl,
       meetingUrl: row.meetingUrl,
@@ -122,6 +126,9 @@ export async function PUT(
       profileName,
       intervieweeName,
       note,
+      resumeUrl,
+      resumeFilename,
+      resumeSize,
       mailUrl,
       jobUrl,
       meetingUrl,
@@ -147,12 +154,15 @@ export async function PUT(
         "profileName" = $6, 
         "intervieweeName" = $7, 
         note = $8,
-        "mailUrl" = $9, 
-        "jobUrl" = $10, 
-        "meetingUrl" = $11, 
-        progress = $12, 
+        resume_url = $9,
+        resume_filename = $10,
+        resume_size = $11,
+        "mailUrl" = $12, 
+        "jobUrl" = $13, 
+        "meetingUrl" = $14, 
+        progress = $15, 
         "updatedAt" = NOW()
-      WHERE id = $13
+      WHERE id = $16
       RETURNING *`,
       [
         new Date(replyDate),
@@ -163,6 +173,9 @@ export async function PUT(
         profileName || null,
         intervieweeName || null,
         note || null,
+        resumeUrl || null,
+        resumeFilename || null,
+        resumeSize || null,
         mailUrl || null,
         jobUrl || null,
         meetingUrl || null,
@@ -193,9 +206,9 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // Check if interview exists and get creator
+    // Check if interview exists and get creator and resume URL
     const checkResult = await pool.query(
-      `SELECT "createdBy" FROM interviews WHERE id = $1`,
+      `SELECT "createdBy", resume_url FROM interviews WHERE id = $1`,
       [id]
     );
 
@@ -207,6 +220,7 @@ export async function DELETE(
     }
 
     const createdBy = checkResult.rows[0].createdBy;
+    const resumeUrl = checkResult.rows[0].resume_url;
 
     // Check permissions: Admin can delete all, Bidder can delete own only
     if (
@@ -217,6 +231,17 @@ export async function DELETE(
         { error: "You don't have permission to delete this interview" },
         { status: 403 }
       );
+    }
+
+    // Delete resume from Vercel Blob if exists
+    if (resumeUrl) {
+      try {
+        const { del } = await import("@vercel/blob");
+        await del(resumeUrl);
+      } catch (error) {
+        console.error("Error deleting resume from blob:", error);
+        // Continue with interview deletion even if blob deletion fails
+      }
     }
 
     await pool.query(`DELETE FROM interviews WHERE id = $1`, [id]);

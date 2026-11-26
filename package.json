@@ -14,11 +14,13 @@
     "db:setup-neon": "tsx scripts/setup-neon.ts",
     "db:add-note": "tsx scripts/add-note-column.ts",
     "db:add-timezone": "tsx scripts/add-timezone-column.ts",
+    "db:add-resume": "tsx scripts/add-resume-columns.ts",
     "db:studio": "prisma studio"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.1",
     "@prisma/client": "^6.1.0",
+    "@vercel/blob": "^2.9.0",
     "bcryptjs": "^2.4.3",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",

@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
       SELECT 
         i.id, i."replyDate", i."interviewTime", i.timezone, i.country, 
         i."suggestedRole", i."profileName", i."intervieweeName", i.note,
+        i.resume_url, i.resume_filename, i.resume_size,
         i."mailUrl", i."jobUrl", i."meetingUrl",
         i.progress, i."createdBy", i."createdAt", i."updatedAt",
         u.id as "creator_id", u.username as "creator_username", u.name as "creator_name"
@@ -94,6 +95,9 @@ export async function GET(request: NextRequest) {
         profileName: row.profileName,
         intervieweeName: row.intervieweeName,
         note: row.note,
+        resumeUrl: row.resume_url,
+        resumeFilename: row.resume_filename,
+        resumeSize: row.resume_size,
         mailUrl: row.mailUrl,
         jobUrl: row.jobUrl,
         meetingUrl: row.meetingUrl,
@@ -149,6 +153,9 @@ export async function POST(request: NextRequest) {
       profileName,
       intervieweeName,
       note,
+      resumeUrl,
+      resumeFilename,
+      resumeSize,
       mailUrl,
       jobUrl,
       meetingUrl,
@@ -172,8 +179,8 @@ export async function POST(request: NextRequest) {
 
     const result = await pool.query(
       `INSERT INTO interviews 
-        (id, "replyDate", "interviewTime", timezone, country, "suggestedRole", "profileName", "intervieweeName", note, "mailUrl", "jobUrl", "meetingUrl", progress, "createdBy", "createdAt", "updatedAt")
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, NOW(), NOW())
+        (id, "replyDate", "interviewTime", timezone, country, "suggestedRole", "profileName", "intervieweeName", note, resume_url, resume_filename, resume_size, "mailUrl", "jobUrl", "meetingUrl", progress, "createdBy", "createdAt", "updatedAt")
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, NOW(), NOW())
       RETURNING *`,
       [
         generateId(),
@@ -185,6 +192,9 @@ export async function POST(request: NextRequest) {
         profileName || null,
         intervieweeName || null,
         note || null,
+        resumeUrl || null,
+        resumeFilename || null,
+        resumeSize || null,
         mailUrl || null,
         jobUrl || null,
         meetingUrl || null,

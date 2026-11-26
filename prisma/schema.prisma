@@ -32,6 +32,9 @@ model Interview {
   profileName     String?
   intervieweeName String?
   note            String?
+  resumeUrl       String?         @map("resume_url")
+  resumeFilename  String?         @map("resume_filename")
+  resumeSize      Int?            @map("resume_size")
   mailUrl         String?
   jobUrl          String?
   meetingUrl      String?
