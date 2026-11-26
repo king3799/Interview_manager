@@ -10,10 +10,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only Admin can view users
-    if (session.user.role !== "ADMIN") {
+    // Admin and Bidder can view users (Bidder might need it for filtering)
+    if (session.user.role === "VIEWER") {
       return NextResponse.json(
-        { error: "Only admins can view users" },
+        { error: "Viewers cannot view users" },
         { status: 403 }
       );
     }
