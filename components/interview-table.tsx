@@ -26,10 +26,39 @@ interface InterviewTableProps {
   };
   onRefresh: () => void;
   startIndex?: number; // For row numbering across pages
+  sortConfig?: {
+    key: "replyDate" | "interviewTime" | "country" | "createdBy";
+    direction: "asc" | "desc";
+  } | null;
+  onSort?: (key: "replyDate" | "interviewTime" | "country" | "createdBy") => void;
 }
 
-export function InterviewTable({ interviews, user, onRefresh, startIndex = 0 }: InterviewTableProps) {
+export function InterviewTable({ interviews, user, onRefresh, startIndex = 0, sortConfig, onSort }: InterviewTableProps) {
   const isViewer = user.role === "VIEWER";
+
+  const getSortIcon = (columnKey: "replyDate" | "interviewTime" | "country" | "createdBy") => {
+    if (!sortConfig || sortConfig.key !== columnKey) {
+      return (
+        <svg style={{ width: "1rem", height: "1rem", display: "inline", marginLeft: "0.25rem", opacity: 0.3 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+        </svg>
+      );
+    }
+
+    if (sortConfig.direction === "asc") {
+      return (
+        <svg style={{ width: "1rem", height: "1rem", display: "inline", marginLeft: "0.25rem" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+        </svg>
+      );
+    }
+
+    return (
+      <svg style={{ width: "1rem", height: "1rem", display: "inline", marginLeft: "0.25rem" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    );
+  };
 
   const getProgressStyle = (progress: string) => {
     const styles: Record<string, { bg: string; color: string; label: string }> = {
@@ -52,13 +81,33 @@ export function InterviewTable({ interviews, user, onRefresh, startIndex = 0 }: 
           <thead style={{ background: "#f9fafb", borderBottom: "1px solid #e5e7eb" }}>
             <tr>
               <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", width: "60px" }}>No.</th>
-              <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151" }}>Reply Date</th>
-              <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151" }}>Interview Time</th>
-              <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151" }}>Country</th>
+              <th 
+                style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", cursor: "pointer", userSelect: "none" }}
+                onClick={() => onSort && onSort("replyDate")}
+              >
+                Reply Date {getSortIcon("replyDate")}
+              </th>
+              <th 
+                style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", cursor: "pointer", userSelect: "none" }}
+                onClick={() => onSort && onSort("interviewTime")}
+              >
+                Interview Time {getSortIcon("interviewTime")}
+              </th>
+              <th 
+                style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", cursor: "pointer", userSelect: "none" }}
+                onClick={() => onSort && onSort("country")}
+              >
+                Country {getSortIcon("country")}
+              </th>
               <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151" }}>Role</th>
               <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151" }}>Progress</th>
               {!isViewer && (
-                <th style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151" }}>Created By</th>
+                <th 
+                  style={{ padding: "0.75rem 1rem", textAlign: "left", fontWeight: "600", color: "#374151", cursor: "pointer", userSelect: "none" }}
+                  onClick={() => onSort && onSort("createdBy")}
+                >
+                  Created By {getSortIcon("createdBy")}
+                </th>
               )}
               <th style={{ padding: "0.75rem 1rem", textAlign: "right", fontWeight: "600", color: "#374151" }}>Actions</th>
             </tr>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { InterviewTable } from "./interview-table";
@@ -49,6 +49,10 @@ export function InterviewList({ user }: InterviewListProps) {
     startDate: searchParams.get("startDate") || "",
     endDate: searchParams.get("endDate") || "",
   });
+  const [sortConfig, setSortConfig] = useState<{
+    key: "replyDate" | "interviewTime" | "country" | "createdBy";
+    direction: "asc" | "desc";
+  } | null>(null);
 
   const canAdd = user.role === "ADMIN" || user.role === "BIDDER";
   const isViewer = user.role === "VIEWER";
@@ -117,11 +121,52 @@ export function InterviewList({ user }: InterviewListProps) {
     router.push("/interviews");
   };
 
+  // Sorting function
+  const handleSort = (key: "replyDate" | "interviewTime" | "country" | "createdBy") => {
+    let direction: "asc" | "desc" = "asc";
+    
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    
+    setSortConfig({ key, direction });
+  };
+
+  // Apply sorting to interviews
+  const sortedInterviews = useMemo(() => {
+    let sortableInterviews = [...interviews];
+    
+    if (sortConfig !== null) {
+      sortableInterviews.sort((a, b) => {
+        let aValue: any;
+        let bValue: any;
+        
+        if (sortConfig.key === "createdBy") {
+          aValue = a.creator?.name || "";
+          bValue = b.creator?.name || "";
+        } else {
+          aValue = a[sortConfig.key];
+          bValue = b[sortConfig.key];
+        }
+        
+        if (aValue < bValue) {
+          return sortConfig.direction === "asc" ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    
+    return sortableInterviews;
+  }, [interviews, sortConfig]);
+
   // Pagination
-  const totalPages = Math.ceil(interviews.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedInterviews.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentInterviews = interviews.slice(startIndex, endIndex);
+  const currentInterviews = sortedInterviews.slice(startIndex, endIndex);
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
@@ -428,6 +473,8 @@ export function InterviewList({ user }: InterviewListProps) {
             user={user} 
             onRefresh={fetchInterviews} 
             startIndex={startIndex}
+            sortConfig={sortConfig}
+            onSort={handleSort}
           />
           
           {/* Pagination */}
