@@ -30,21 +30,8 @@ export function InterviewTime({
   const utcDateStr = ensureUTC(interviewTime);
   const date = new Date(utcDateStr);
   
-  const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  
   // Format time in the stored timezone
   const storedTime = formatInTimeZone(date, timezone, format);
-  
-  // Format time in browser's local timezone (for tooltip) - this is the key fix
-  const localTime = date.toLocaleString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-    timeZone: browserTimezone
-  }).replace(/(\d+)\/(\d+)\/(\d+),\s*(\d+):(\d+)/, '$3-$1-$2 $4:$5');
 
   // Extract UTC offset from Etc/GMT format
   const getUTCOffset = (tz: string) => {
@@ -76,13 +63,7 @@ export function InterviewTime({
   const utcOffset = getUTCOffset(timezone);
 
   return (
-    <span 
-      title={`Local time (${browserTimezone}): ${localTime}`}
-      style={{ 
-        cursor: "help",
-        ...style
-      }}
-    >
+    <span style={style}>
       {storedTime}
       {showTimezone && (
         <span style={{ fontSize: "0.75rem", color: "#6b7280", marginLeft: "0.5rem" }}>
