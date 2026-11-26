@@ -336,6 +336,7 @@ export function InterviewList({ user }: InterviewListProps) {
               >
                 <option value="">All</option>
                 <option value="SCHEDULED">Scheduled</option>
+                <option value="RESCHEDULED">Rescheduled</option>
                 <option value="PHONE_CALL">Phone Call</option>
                 <option value="TEST">Test</option>
                 <option value="INITIAL">Initial</option>
