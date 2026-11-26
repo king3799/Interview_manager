@@ -118,26 +118,22 @@ export function InterviewDetail({ interviewId, user }: InterviewDetailProps) {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <div>
-          <Link
-            href="/interviews"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              color: "#6b7280",
-              fontSize: "0.875rem",
-              textDecoration: "none",
-              marginBottom: "0.5rem"
-            }}
-          >
-            <svg style={{ width: "1rem", height: "1rem" }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back to list
-          </Link>
-          <h1 style={{ fontSize: "1.875rem", fontWeight: "700", color: "#111827" }}>
-            Interview Details
+          <h1 style={{ fontSize: "1.875rem", fontWeight: "700", color: "#111827", marginBottom: "0.5rem" }}>
+            {interview.profileName || "N/A"}
           </h1>
+          <div style={{ display: "flex", gap: "1rem", fontSize: "0.875rem", color: "#6b7280" }}>
+            <span>
+              <strong>Time:</strong> <InterviewTime 
+                interviewTime={interview.interviewTime}
+                timezone={interview.timezone}
+                format="MMM dd, yyyy HH:mm"
+              />
+            </span>
+            <span>•</span>
+            <span>
+              <strong>Role:</strong> {interview.suggestedRole}
+            </span>
+          </div>
         </div>
         {canEdit && (
           <div style={{ display: "flex", gap: "0.75rem" }}>
@@ -154,7 +150,8 @@ export function InterviewDetail({ interviewId, user }: InterviewDetailProps) {
                 textDecoration: "none",
                 fontWeight: "600",
                 fontSize: "0.875rem",
-                transition: "background 0.2s"
+                transition: "background 0.2s",
+                whiteSpace: "nowrap"
               }}
               onMouseEnter={(e) => e.currentTarget.style.background = "#047857"}
               onMouseLeave={(e) => e.currentTarget.style.background = "#059669"}
@@ -169,6 +166,28 @@ export function InterviewDetail({ interviewId, user }: InterviewDetailProps) {
               variant="button"
               redirectAfterDelete={true}
             />
+            <button
+              onClick={() => router.push("/interviews")}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.5rem 1rem",
+                background: "#6b7280",
+                color: "white",
+                border: "none",
+                borderRadius: "0.5rem",
+                fontSize: "0.875rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "background 0.2s",
+                whiteSpace: "nowrap"
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = "#4b5563"}
+              onMouseLeave={(e) => e.currentTarget.style.background = "#6b7280"}
+            >
+              Back
+            </button>
           </div>
         )}
       </div>
